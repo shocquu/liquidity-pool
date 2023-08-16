@@ -15,8 +15,8 @@ fn main() {
 
     let price = Price((1.5 * lp_pool::FIXED_POINT_SCALE as f64) as u64);
     let min_fee = Percentage(to_fixed_point(0.1));
-    let max_fee = Percentage(to_fixed_point(90.0));
-    let liquidity_target = TokenAmount(to_fixed_point(900.0));
+    let max_fee = Percentage(to_fixed_point(9.0));
+    let liquidity_target = TokenAmount(to_fixed_point(90.0));
 
     let mut lp_pool = match LpPool::init(price, min_fee, max_fee, liquidity_target) {
         Ok(pool) => pool,
@@ -42,7 +42,7 @@ fn main() {
         }
     };
 
-    match lp_pool.swap(StakedTokenAmount(6)) {
+    match lp_pool.swap(StakedTokenAmount(to_fixed_point(6.0))) {
         Ok(received_tokens) => {
             println!("Successfully swapped staked tokens. Received {} tokens.", from_fixed_point(received_tokens.0));
         }
@@ -80,7 +80,7 @@ fn main() {
         }
     };
 
-    match lp_pool.swap(StakedTokenAmount(30)) {
+    match lp_pool.swap(StakedTokenAmount(to_fixed_point(30.0))) {
         Ok(received_tokens) => {
             println!("Successfully swapped staked tokens. Received {} tokens.", from_fixed_point(received_tokens.0));
         }
@@ -101,9 +101,7 @@ fn main() {
 
     match lp_pool.remove_liquidity(LpTokenAmount(to_fixed_point(109.9991))) {
         Ok((returned_tokens, returned_staked_tokens)) => {
-            println!("Successfully removed liquidity.");
-            println!("\tReceived {} tokens.", from_fixed_point(returned_tokens.0));
-            println!("\tReceived {} staked tokens.", returned_staked_tokens.0);
+            println!("Successfully removed liquidity. Received {} tokens & {} staked tokens.", from_fixed_point(returned_tokens.0), from_fixed_point(returned_staked_tokens.0));
         }
         Err(error) => {
             match error {
